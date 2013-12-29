@@ -46,10 +46,4 @@ this file is the same as the one in client.c, if not change them so they are.
 The executebale should output some information to the monitor.
 
 3. Record the Wi-Fi shields ip address. You will need to take this value, and copy it
-into client.c. Look for "SRV_IP" and replace the value there.
-
-4. Run the make file to create two executables, you can ignore the server executable.
-
-5. Run the client executable. It will output information of packets being sent. You 
-should see the packets being recieved in the serial monitor. Depending on the speed
-of the Wi-Fi, you may need to change the sleep parameter in client.c. 
+into client.c. 

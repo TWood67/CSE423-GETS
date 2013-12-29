@@ -28,7 +28,8 @@
 
  * ----------------------------------------------------------------
 
- * || Taylor Wood || 12/28/13 || Added the code from the provided site ||
+ * || Taylor Wood || 12/28/13 || Added the code from the provided site and make some
+   modifications. ||
 
  * ----------------------------------------------------------------
 
@@ -45,7 +46,7 @@
 
 #define BUFLEN 512
 #define NPACK 10
-#define PORT 9930
+#define PORT 2390
 
 void diep(char *s) {
 	perror(s);
