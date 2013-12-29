@@ -27,8 +27,10 @@ void loop() {
 }
 
 void clientSetup(){
+  IPAddress server(192, 168, 109, 134);
+  Serial.println("Attempting to connect to server");
   if(status == WL_CONNECTED) {
-    if(client.connect("www.google.com", 80)){
+    if(client.connect(server, 9930)){
       Serial.println("connected to server");
     }
     else{
@@ -38,8 +40,8 @@ void clientSetup(){
 }
 
 void wifiConnect() {
-  char ssid[] = "iPhone";
-  char pass[] = "00000000";
+  char ssid[] = "Ich Tu Dir Weh";
+  char pass[] = "Du Riechst So Gut";
   
   Serial.println("Attempting to connect to WPA network...");
   status = WiFi.begin(ssid, pass);

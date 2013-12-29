@@ -2,6 +2,7 @@
 #include <WiFi.h>
 
 int status = WL_IDLE_STATUS; //Wifi radio's status
+IPAddress ip;
 
 void setup() {
   // initialize serial and wait for the port to open:
@@ -20,12 +21,11 @@ void setup() {
 }
 
 void loop() {
-
 }
 
 void wifiConnect() {
-  char ssid[] = "iPhone";
-  char pass[] = "00000000";
+  char ssid[] = "Ich Tu Dir Weh";
+  char pass[] = "Du Riechst So Gut";
   
   Serial.println("Attempting to connect to WPA network...");
   status = WiFi.begin(ssid, pass);
@@ -39,6 +39,8 @@ void wifiConnect() {
   //if connected, print info about connection
   else{
     Serial.println("Connected");
+    ip = WiFi.localIP();
+    Serial.println(ip);
   }
 }
 
