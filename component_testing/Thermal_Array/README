@@ -1,1 +1,17 @@
-***Make sure to place all folders in the libraries folder into your local libraries folder before running***
+
+                  *****Follow the steps to test functionality of the Thermal Array*****
+                  
+                  **********************************************************************
+                  Note: The sampling rate has been modifed for lower accuracy but higher
+                  number of readings                                
+                  **********************************************************************
+
+1)	Copy both the Adafruit_TMP006 and Adafruit_Sensor folders from CSE423-GETS/component_testing/Thermal_Array/libraries into your local arduino libraries folder.
+2)	Load tmp006.ino into the arduino software.
+3)	Connect VCC on the thermal array to +3V on the DUE. 
+4)	Connect Gnd on the thermal array to Gnd on the DUE.
+5)	Connect SCL on the thermal array to SCL on the DUE. (This is the I2C clock and should be on labeled on the board. I think pin 21)
+6)	Connect SDA on the thermal array to SDA on the DUE. (This is the I2C data pin and should be labeled on the board. I think pin 20
+7)	Run and compile the sketch with the DUE selected as the board.
+8)	Open the serial monitor with 9600 baud rate.
+
