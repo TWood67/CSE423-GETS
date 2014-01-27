@@ -19,8 +19,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "Ich Tu Dir Weh"; //  your network SSID (name)
-char pass[] = "Du Riechst So Gut";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "iPhone"; //  your network SSID (name)
+char pass[] = "00000000";    // your network password (use for WPA, or use as key for WEP)
 IPAddress ip;          //IP address of the shield
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 
@@ -55,6 +55,7 @@ void setup() {
     Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
+    //status = WiFi.begin(ssid);
 
     // wait 2 seconds for connection:
     delay(2000);
@@ -90,6 +91,8 @@ void loop() {
     if (len > 0) packetBuffer[len] = 0;
     Serial.println("Contents:");
     Serial.println(packetBuffer);
+     
+    //delay(1000);
 
     // send a reply, to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
