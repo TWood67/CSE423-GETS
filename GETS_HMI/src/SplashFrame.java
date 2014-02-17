@@ -211,7 +211,7 @@ public class SplashFrame extends javax.swing.JFrame
     private void btnLaunchMouseClicked(java.awt.event.MouseEvent evt) 
     {
         //this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        ParentFrameEOH mainFrame = new ParentFrameEOH();
+        ParentFrameSecondary mainFrame = new ParentFrameSecondary();
         mainFrame.setVisible(true);
         this.setVisible(false);
         
