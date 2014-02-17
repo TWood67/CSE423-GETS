@@ -49,7 +49,6 @@ public class ParentFrameEOH extends javax.swing.JFrame
     private javax.swing.JToggleButton tgbEngines;
     private javax.swing.JTextField txtTemp;
     
-    public TurretHandler turMan;
     public ThermoHandler thurmoMan;
     public CoptorHandler copMan;
     
@@ -71,7 +70,6 @@ public class ParentFrameEOH extends javax.swing.JFrame
         // Initialize Components
         initComponents();
         
-        turMan = new TurretHandler();
         thurmoMan = new ThermoHandler();
         copMan = new CoptorHandler();
         
@@ -372,7 +370,7 @@ public class ParentFrameEOH extends javax.swing.JFrame
         if(lstSelections.getSelectedIndex() != -1)
         {
             // Send the selection index to the TurretHandler
-            turMan.Target(lstSelections.getSelectedIndex());
+            //turMan.Target(lstSelections.getSelectedIndex());
         }
         else // Notify user to select a target
         {
@@ -393,7 +391,7 @@ public class ParentFrameEOH extends javax.swing.JFrame
     private void btnFireActionPerformed(java.awt.event.ActionEvent evt) 
     {
         // Determine if a target has been identified
-        if(turMan.isTargeted())
+       /* if(turMan.isTargeted())
         {
             // Get Selected Target
             int index = turMan.getTargetIndex();
@@ -407,7 +405,7 @@ public class ParentFrameEOH extends javax.swing.JFrame
         else // Notify user of failure to identify target
         {
             JOptionPane.showMessageDialog(null, "The turret has not yet been\ntargeted. Select a target\nbefore firing.");
-        }
+        }*/
     }
 
     //===============================================================================>
