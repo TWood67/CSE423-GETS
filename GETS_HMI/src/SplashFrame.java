@@ -110,7 +110,7 @@ public class SplashFrame extends javax.swing.JFrame
 
         lblStatus.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 11)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(255, 255, 255));
-        lblStatus.setText("Release 1.2 EOH Edition");
+        lblStatus.setText("Release 3.1");
         lblStatus.setAlignmentY(0.3F);
 
         btnLaunch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/LaunchActive.png"))); // NOI18N
@@ -211,7 +211,7 @@ public class SplashFrame extends javax.swing.JFrame
     private void btnLaunchMouseClicked(java.awt.event.MouseEvent evt) 
     {
         //this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        ParentFrameSecondary mainFrame = new ParentFrameSecondary();
+        HostGUI mainFrame = new HostGUI();
         mainFrame.setVisible(true);
         this.setVisible(false);
         

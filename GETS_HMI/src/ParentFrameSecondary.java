@@ -2,11 +2,15 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.channels.DatagramChannel;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.naming.Context;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
@@ -22,11 +26,17 @@ import javax.swing.SwingWorker;
  * Description: Main GUI for the EOH Demo 
  * 
  * ==================================================================================
+ * Protocol Overview:
+ *      
+ *      
+ * 
+ * ==================================================================================
  * Change History:
  * ________________________________________________________________
  * || Author || Date    || Description                           ||
  * ----------------------------------------------------------------
  * || Will M || 2/16/14 || Created File                          ||
+ * || Will M || 4/01/14 || Final scope control changes added     ||
  * ----------------------------------------------------------------
  *
  * ==================================================================================*/
@@ -243,8 +253,6 @@ public class ParentFrameSecondary extends javax.swing.JFrame
                 .addGap(38, 38, 38))
         );
 
-        tgbAuto.getAccessibleContext().setAccessibleName("Toggle Autoflight");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -281,61 +289,11 @@ public class ParentFrameSecondary extends javax.swing.JFrame
 
     
     
-    //===============================================================================>
-    // Name: tgbEnginesActionPerformed
-    // 
-    // Input: evt<ActionEvent> = pointer to btn event
-    //
-    // Output: NONE
-    //
-    // Description: Sends a message to toggle the engines on the quadcopter
-    //===============================================================================>
-    private void tgbEnginesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tgbEnginesActionPerformed
-        // Check to see if this action is to enable or disable
-        if(tgbEngines.isSelected())
-        {            
-            // Disable the thermo controls
-            prgTemperature.setEnabled(false);
-            txtTemp.setEnabled(false);
-            txtTemp.setText("---.--");
-            
-            if(tgbAuto.isSelected())
-                tgbAuto.doClick();
-            tgbAuto.setEnabled(false);
-            
-            // Enable Engine Controls
-            sldAltitude.setEnabled(true);
-            
-            // Tell the coptor to start motor
-            selectedAction = PERFORM_ENON;
-        }
-        else
-        {
-            // Button is attempted to be set to Disabled
-            // Check to ensure motor speed is at 0%
-            if(sldAltitude.getValue() != 0)
-            {
-                // Set the slider value
-                sldAltitude.setValue(0);
-                sldAltitude.setEnabled(false); 
-                //copMan.setAltitude(0);
-            }
-            
-            // Enable the other controls
-            prgTemperature.setEnabled(true);
-            txtTemp.setEnabled(true);
-            tgbAuto.setEnabled(true);
-            
-            // Disable Engine controls
-            sldAltitude.setEnabled(false);
-            
-            // Tell the coptor to stop motors
-            selectedAction = PERFORM_ENOFF;
-            
-        }
-    }//GEN-LAST:event_tgbEnginesActionPerformed
-
     
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        isExiting = false;
+    }//GEN-LAST:event_formWindowClosing
+
     //===============================================================================>
     // Name: sldAltitudeMouseReleased
     // 
@@ -354,8 +312,65 @@ public class ParentFrameSecondary extends javax.swing.JFrame
         {
             selectedAction = PERFORM_DOWN;
         }
-        
     }//GEN-LAST:event_sldAltitudeMouseReleased
+
+    private void sldAltitudeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldAltitudeMousePressed
+        altitudeValue = sldAltitude.getValue();
+    }//GEN-LAST:event_sldAltitudeMousePressed
+
+    //===============================================================================>
+    // Name: tgbEnginesActionPerformed
+    // 
+    // Input: evt<ActionEvent> = pointer to btn event
+    //
+    // Output: NONE
+    //
+    // Description: Sends a message to toggle the engines on the quadcopter
+    //===============================================================================>
+    private void tgbEnginesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tgbEnginesActionPerformed
+        // Check to see if this action is to enable or disable
+        if(tgbEngines.isSelected())
+        {
+            // Disable the thermo controls
+            prgTemperature.setEnabled(false);
+            txtTemp.setEnabled(false);
+            txtTemp.setText("---.--");
+
+            if(tgbAuto.isSelected())
+            tgbAuto.doClick();
+            tgbAuto.setEnabled(false);
+
+            // Enable Engine Controls
+            sldAltitude.setEnabled(true);
+
+            // Tell the coptor to start motor
+            selectedAction = PERFORM_ENON;
+        }
+        else
+        {
+            // Button is attempted to be set to Disabled
+            // Check to ensure motor speed is at 0%
+            if(sldAltitude.getValue() != 0)
+            {
+                // Set the slider value
+                sldAltitude.setValue(0);
+                sldAltitude.setEnabled(false);
+                //copMan.setAltitude(0);
+            }
+
+            // Enable the other controls
+            prgTemperature.setEnabled(true);
+            txtTemp.setEnabled(true);
+            tgbAuto.setEnabled(true);
+
+            // Disable Engine controls
+            sldAltitude.setEnabled(false);
+
+            // Tell the coptor to stop motors
+            selectedAction = PERFORM_ENOFF;
+
+        }
+    }//GEN-LAST:event_tgbEnginesActionPerformed
 
     //===============================================================================>
     // Name: tgbAutoActionPerformed
@@ -369,19 +384,19 @@ public class ParentFrameSecondary extends javax.swing.JFrame
     private void tgbAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tgbAutoActionPerformed
         // Check to see if this action is to enable or disable
         if(tgbAuto.isSelected())
-        {            
+        {
             // Disable the thermo controls
             prgTemperature.setEnabled(false);
             txtTemp.setEnabled(false);
             txtTemp.setText("---.--");
-            
+
             if(tgbEngines.isSelected())
-                tgbEngines.doClick();
+            tgbEngines.doClick();
             tgbEngines.setEnabled(false);
-            
+
             // Disable Engine Controls
             sldAltitude.setEnabled(false);
-            
+
             // Tell the coptor to start AutoConf
             selectedAction = PERFORM_AUTOR;
         }
@@ -393,25 +408,17 @@ public class ParentFrameSecondary extends javax.swing.JFrame
             {
                 // Set the slider value
                 sldAltitude.setValue(0);
-                sldAltitude.setEnabled(false); 
+                sldAltitude.setEnabled(false);
                 //copMan.setAltitude(0);
             }
-            
+
             // Enable the other controls
             prgTemperature.setEnabled(true);
             txtTemp.setEnabled(true);
             tgbEngines.setEnabled(true);
-                       
+
         }
     }//GEN-LAST:event_tgbAutoActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        isExiting = false;
-    }//GEN-LAST:event_formWindowClosing
-
-    private void sldAltitudeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldAltitudeMousePressed
-        altitudeValue = sldAltitude.getValue();
-    }//GEN-LAST:event_sldAltitudeMousePressed
 
 
     //===============================================================================>
@@ -442,16 +449,41 @@ public class ParentFrameSecondary extends javax.swing.JFrame
     //===============================================================================>
     SwingWorker<Boolean, Integer> thermoMan = new SwingWorker<Boolean, Integer>() 
     {
-        int port = 2031;        // For the stored port number
+       /* int port = 2031;        // For the stored port number
         byte buffer[];          // Buffer for the incoming data
         DatagramPacket pack;    // Space for the incoming Packet
         DatagramSocket sock;    // The UDP socket
         InetAddress thermoIP;   // IP of the thermoArray
+        DatagramChannel ch;*/
+        
+        InetAddress clientip;
+        int clientport;
+        DatagramPacket p3;
     
         @Override
         protected Boolean doInBackground() throws Exception 
         {
-            String msg = "";
+           byte b1[],b2[];
+            b1=new byte[100];
+            b2=new byte[100];
+
+            DatagramSocket s = new DatagramSocket(2031);
+            
+            DatagramPacket p1 = new DatagramPacket(b1,b1.length);
+            s.receive(p1);
+
+            b1=p1.getData();
+            String str = new String( b1);
+
+            clientport = p1.getPort();  //packet mein save hota hai 
+            clientip=p1.getAddress();
+
+            System.out.println("RECIEVED FROM CLIENT IP ="+clientip+" port="+clientport+" data="+str);
+
+            
+            
+            return true;
+            /* String msg = "";
             String[] parsedMsg;
             boolean Rx = true, thermAck = false, ackflag = false;
             
@@ -461,6 +493,7 @@ public class ParentFrameSecondary extends javax.swing.JFrame
             {
                 try
                 {
+                    System.out.println("Waiting on RX");
                     // While recieving messages
                     while(Rx)
                     {
@@ -469,13 +502,16 @@ public class ParentFrameSecondary extends javax.swing.JFrame
                         // Wrap the buffer in a packet
                         pack = new DatagramPacket(buffer, 1024);
                         // Create a new socket on the given port
-                        sock = new DatagramSocket(port);
+                        //sock = new DatagramSocket(null);
+                        ch = DatagramChannel.open();
+                        sock = ch.socket();
+                        sock.bind(new InetSocketAddress("192.168.1.73", port));
                         
                         // Attempt to retrieve a packet on the port 
                         sock.receive(pack);
                         msg = new String(pack.getData(),pack.getOffset(),pack.getLength());
                         parsedMsg = msg.split("_");                  
-                    
+                    System.out.println(msg);
                         // If an acquired communication has been accepted, parse response
                         if(thermAck && parsedMsg[0].equalsIgnoreCase("RESPOND"))
                         {
@@ -550,7 +586,7 @@ public class ParentFrameSecondary extends javax.swing.JFrame
             // Send the defined packet through the socket
             sock.send(pack);
             Rx = true;
-            return true;
+            return true;*/
         }
 
         @Override
@@ -568,7 +604,6 @@ public class ParentFrameSecondary extends javax.swing.JFrame
     };
     
     
-    
     //===============================================================================>
     // Name: copterMan
     // Extends: SwingWorker
@@ -578,7 +613,7 @@ public class ParentFrameSecondary extends javax.swing.JFrame
     //===============================================================================>
     SwingWorker<Boolean, Double> copterMan = new SwingWorker<Boolean, Double>() 
     {
-        int port = 2032;        // For the stored port number
+        int port = 12346;        // For the stored port number
         byte buffer[];          // Buffer for the incoming data
         DatagramPacket pack;    // Space for the incoming Packet
         DatagramSocket sock;    // The UDP socket
