@@ -1,34 +1,9 @@
-/* ==================================================================================
- * File: DueComp.ini
- * System: Computation DUE
- * Team: MUSCA
- * Course Info: CSE 423 Fall 2013
- * 
- * Author(s): Taylor Wood
- * Email: Taylorwood67@gmail.com
- * ==================================================================================
- * Description: This is the ini file to be uploaded to the Computation DUE board.
- * This board will handle all computations and write to registers for the UNO to 
- * receive. It will also read registers for IMU sensor data and UDP packets
- * ==================================================================================
- * Change History:
- *		________________________________________________________________
- * 		|| Author	|| Date		|| Description		||
- *		----------------------------------------------------------------
- * 		|| 		|| 			|| 				||
- *		----------------------------------------------------------------
- *
- * ==================================================================================*/
- 
- /*
-  * Libraries to include
-  */
 #include <Wire.h>
 
 
 /*
- * Variable Instantiation
- */
+* Variable Instantiation
+*/
 // Create motor variables to hold the speed value
 // TODO: Create variables for all motors
 int starboardVal;
@@ -53,11 +28,13 @@ void setup() {
    // TODO: Do this for all pins
    starboardPin = 53;
    
-   Wire.begin();
+   Wire.begin(6);
+   Wire1.begin(6);
+   Wire.onReceive(receiveEvent);
    
    // set the pin mode
    // TODO: Do this for all pins
-   // pinMode(starboardPin, OUTPUT); 
+   // pinMode(starboardPin, OUTPUT);
 }
 
 //===============================================================================>
@@ -66,13 +43,33 @@ void setup() {
 // Description: The main loop controlling all of the functionality
 //===============================================================================>
 void loop() {
+  //int i;
+  //for (i = 35; i < 90; i++) {
+     //starboardVal = i;
+     //digitalWrite(starboardPin, starboardVal);
+     Wire.beginTransmission(4);
+     Wire.write(99);
+     Wire.endTransmission();
+     delay(50);
+   //}
+}
+
+void receiveEvent(int howMany)
+{
+  //funct();
+  //delay(5000);
+}
+
+void funct()
+{
   int i;
   for (i = 35; i < 90; i++) {
      starboardVal = i;
-     //digitalWrite(starboardPin, starboardVal); 
-     Wire.beginTransmission(4);
-     Wire.write(starboardVal);
-     Wire.endTransmission();
+     //digitalWrite(starboardPin, starboardVal);
+     Wire1.beginTransmission(4);
+     Wire1.write(starboardVal);
+     Wire1.endTransmission();
+     Serial.println(i);
      delay(500);
    }
 }
