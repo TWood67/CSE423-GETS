@@ -1,0 +1,114 @@
+#include <Wire.h>
+
+
+/*
+* Variable Instantiation
+*/
+// Create motor variables to hold the speed value
+// TODO: Create variables for all motors
+
+
+// Assign pin values for each motor value to be
+// written to.
+// TODO: Create these pins for all values
+
+//===============================================================================>
+// Name: setup
+//
+// Description: Arms the motors and performs various functions
+//===============================================================================>
+
+byte pitch, roll, yaw, sign;
+byte buf[5];
+byte * bufptr;
+
+
+void setup() {
+  
+   // assign a base value
+   // TODO: Do this for other values
+
+ 
+   // assign pin to variables
+   // TODO: Do this for all pins
+  bufptr = buf;
+
+   Serial.begin(9600);
+   Serial1.begin(9600);  
+   Wire.begin(6);
+   Wire.onReceive(receiveEvent);
+  
+   // set the pin mode
+   // TODO: Do this for all pins
+   // pinMode(starboardPin, OUTPUT);
+
+}
+//===============================================================================>
+// Name: loop
+//// Description: The main loop controlling all of the functionality
+//===============================================================================>
+void loop() {
+
+    Serial.println("IN LOOP");
+    
+    //noInterrupts();
+     
+    //interrupts();
+     
+   //}
+}
+
+/*void receiveEvent(int howMany)
+{
+   roll = Wire.read();
+   pitch = Wire.read();
+   yaw = Wire.read();
+   sign = Wire.read();
+   
+   Serial.print("roll: ");
+   Serial.print(roll);
+   
+   
+   Serial1.write(roll);
+   Serial1.write(pitch);
+   Serial1.write(yaw);
+   Serial1.write(sign);
+   
+   Serial.println();
+   Serial.print("Pitch: ");
+   Serial.print(pitch);
+   
+   //if(Serial1.available()){
+       
+   //}
+}*/
+
+void receiveEvent(int howMany)
+{
+   roll = Wire.read();
+   pitch = Wire.read();
+   yaw = Wire.read();
+   sign = Wire.read();
+   
+   buf[0] = roll;
+   buf[1] = pitch;
+   buf[2] = yaw;
+   buf[3] = sign;
+   buf[4] = '255';
+   
+   Serial.print("roll: ");
+   Serial.print(roll);
+   
+   
+   Serial1.write(buf[0]);
+   Serial1.write(buf[1]);
+   Serial1.write(buf[2]);
+   Serial1.write(buf[3]);
+   Serial1.write(buf[4]);
+   
+   Serial.println();
+   Serial.print("Pitch: ");
+   Serial.print(pitch);
+   
+}
+
