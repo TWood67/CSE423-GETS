@@ -21,6 +21,7 @@
 byte pitch, roll, yaw, sign;
 byte buf[5];
 byte * bufptr;
+bool flag = false;
 
 
 void setup() {
@@ -50,6 +51,15 @@ void setup() {
 void loop() {
 
     Serial.println("IN LOOP");
+    delay(50);
+    /*while (flag == true)
+    {
+       Serial1.write(buf[1]);
+       while (Serial1.available()== 0);
+         if (Serial1.read() == )
+         flag = false; 
+    }*/
+    
     
     //noInterrupts();
      
@@ -90,31 +100,37 @@ void receiveEvent(int howMany)
    yaw = Wire.read();
    sign = Wire.read();
    
-   buf[0] = '255';
+   //buf[0] = '255';
    buf[1] = roll;
-   buf[2] = '254';
+   //buf[2] = '254';
    buf[3] = pitch;
-   buf[4] = '253';
+   //buf[4] = '253';
    buf[5] = yaw;
-   buf[6] = '252';
+   //buf[6] = '252';
    buf[7] = sign;
    //buf[8] = '251';
-   
-   Serial.print("roll: ");
-   Serial.print(roll);
+   //flag = true;
    
    
-   Serial1.write(buf[0]);
+   
+   
+   //Serial1.write(buf[0]);
    Serial1.write(buf[1]);
-   Serial1.write(buf[2]);
+   //Serial1.write(buf[2]);
    Serial1.write(buf[3]);
-   Serial1.write(buf[4]);
+   //Serial1.write(buf[4]);
    Serial1.write(buf[5]);
-   Serial1.write(buf[6]);
+   //Serial1.write(buf[6]);
    Serial1.write(buf[7]);
+ 
    
-   Serial.println();
+   Serial.print("Roll: ");
+   Serial.println(buf[1]);
    Serial.print("Pitch: ");
-   Serial.print(pitch);
-   
+   Serial.println(buf[3]);
+   Serial.print("Yaw: ");
+   Serial.println(buf[5]);
+   Serial.print("Sign: ");
+   Serial.println(buf[7]);
+ 
 }
