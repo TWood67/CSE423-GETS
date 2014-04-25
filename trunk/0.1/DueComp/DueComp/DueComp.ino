@@ -15,6 +15,10 @@ int starboardPin;
 int myArray[8];
 int * arrayptr;
 int i = 0;
+         byte roll;
+         byte pitch;
+         byte yaw;
+         byte sign;
 
 //===============================================================================>
 // Name: setup
@@ -58,12 +62,12 @@ void loop() {
      //Wire.endTransmission();
      //delay(50);
    //}
-     Wire1.beginTransmission(4);
-     Wire1.write(99);
-     Wire1.endTransmission();
-     delay(50);
+     //Wire1.beginTransmission(4);
+     //Wire1.write(99);
+     //Wire1.endTransmission();
+     //delay(50);
      Serial.println("IN LOOP ");
-     
+     //Serial.flush();
    //if (Serial1.available())
    //{
      
@@ -72,18 +76,16 @@ void loop() {
       //Serial1.readBytesUntil('!',myArray,5);
       //Serial.print("MyArray: ");
       //Serial.println(myArray);
-      /*byte roll = myArray[0];
-      byte pitch = myArray[1];
-      byte yaw = myArray[2];
-      byte sign = myArray[3];*/
-      if(Serial1.available()){
-        if(Serial1.read() == 255)
+    /*  byte roll = Serial1.read();
+      delay(10);
+      byte pitch = Serial1.read();
+      delay(10);
+      byte yaw = Serial1.read();*/
+      
+     // byte sign = Serial1.read();
+      while(Serial1.available() == 0 );
+       /* if(Serial1.read() == '255')
         {
-          //roll, pitch, yaw, sign
-          /*myArray[i] = Serial1.read();
-          Serial.println(myArray[i]);
-          if(i == 4)
-            i = 0;*/
           myArray[0] = Serial1.read();
           Serial.print("Roll: ");
           Serial.println(myArray[0]);
@@ -108,21 +110,58 @@ void loop() {
         }
         else
           Serial.println("Doesnt Work ");
-          //myArray[4] = Serial1.read();
-        //}*/
-        //(*arrayptr) = Serial1.read();
-      //i++;
-     //}
+         */ 
+         int unread = Serial1.available();
+         Serial.print("Unread ");
+         Serial.println(unread);
+         //Serial1.flush();
+        while(unread == 4)
+        {
+          
+         roll = Serial1.read();
+         if(roll == 255)
+         {
+         Serial1.flush();
+         break;
+         }
+   
+   Serial.print("Roll: ");
+   Serial.println(roll);
+   
+   pitch = Serial1.read();
+   if(pitch == 255)
+   {
+         Serial1.flush();
+         break;
    }
-   /*Serial.print("Roll: ");
-   Serial.println(myArray[0]);
    Serial.print("Pitch: ");
-   Serial.println(myArray[1]);
+   Serial.println(pitch);
+   
+   yaw = Serial1.read();
+   if(roll == 255)
+   {
+         Serial1.flush();
+         break;
+   }
    Serial.print("Yaw: ");
-   Serial.println(myArray[2]);
+   Serial.println(yaw);
+   if(yaw == 255)
+   {
+         Serial1.flush();
+         break;
+   }
+         
+   sign = Serial1.read();
+   if(sign == 255)
+   {
+         Serial1.flush();
+         break;
+   }
    Serial.print("Sign: ");
-   Serial.println(myArray[3]);
-   Serial.println(myArray[4]);*/
+   Serial.println(sign);
+   Serial1.flush(); 
+        }   
+   //Serial.println(myArray[4]);
    
 }
 
