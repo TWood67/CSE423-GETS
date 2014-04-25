@@ -12,7 +12,7 @@ int starboardVal;
 // written to.
 // TODO: Create these pins for all values
 int starboardPin;
-int myArray[5];
+int myArray[8];
 int * arrayptr;
 int i = 0;
 
@@ -33,7 +33,7 @@ void setup() {
    starboardPin = 53;
    arrayptr = myArray;
    
-   Wire.begin(6);
+   Wire1.begin();
    //Wire1.begin(6);
    //Wire.onReceive(receiveEvent);
    Serial.begin(9600);
@@ -58,11 +58,11 @@ void loop() {
      //Wire.endTransmission();
      //delay(50);
    //}
-     Wire.beginTransmission(4);
-     Wire.write(99);
-     Wire.endTransmission();
+     Wire1.beginTransmission(4);
+     Wire1.write(99);
+     Wire1.endTransmission();
      delay(50);
-   Serial.println("IN LOOP ");
+     Serial.println("IN LOOP ");
      
    //if (Serial1.available())
    //{
@@ -77,24 +77,44 @@ void loop() {
       byte yaw = myArray[2];
       byte sign = myArray[3];*/
       if(Serial1.available()){
-        //if(Serial1.read() == 255)
-        //{
+        if(Serial1.read() == 255)
+        {
           //roll, pitch, yaw, sign
           /*myArray[i] = Serial1.read();
           Serial.println(myArray[i]);
           if(i == 4)
             i = 0;*/
           myArray[0] = Serial1.read();
+          Serial.print("Roll: ");
+          Serial.println(myArray[0]);
+        }
+        else if (Serial1.read() == 254)
+        {
           myArray[1] = Serial1.read();
+          Serial.print("Pitch: ");
+          Serial.println(myArray[1]);
+        }
+        else if (Serial1.read() == 253)
+        {
           myArray[2] = Serial1.read();
+          Serial.print("Yaw: ");
+          Serial.println(myArray[2]);
+        }
+        else if (Serial1.read() == 252)
+        {
           myArray[3] = Serial1.read();
-          myArray[4] = Serial1.read();
+          Serial.print("Sign: ");
+          Serial.println(myArray[3]);
+        }
+        else
+          Serial.println("Doesnt Work ");
+          //myArray[4] = Serial1.read();
         //}*/
         //(*arrayptr) = Serial1.read();
       //i++;
-     }
-   //}
-   Serial.print("Roll: ");
+     //}
+   }
+   /*Serial.print("Roll: ");
    Serial.println(myArray[0]);
    Serial.print("Pitch: ");
    Serial.println(myArray[1]);
@@ -102,12 +122,12 @@ void loop() {
    Serial.println(myArray[2]);
    Serial.print("Sign: ");
    Serial.println(myArray[3]);
-   Serial.println(myArray[4]);
+   Serial.println(myArray[4]);*/
    
 }
 
-void receiveEvent(int howMany)
-{
+//void receiveEvent(int howMany)
+//{
   //funct();
   //delay(5000);
   /*int roll = Wire.read();
@@ -123,7 +143,7 @@ void receiveEvent(int howMany)
   Serial.println("Sign: ");
   Serial.print(sign);*/
   
-}
+//}
 
 /*void funct()
 {
