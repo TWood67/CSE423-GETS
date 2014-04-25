@@ -162,7 +162,7 @@ void receiveEvent(int howMany)
    buf[7] = sign;
    //buf[8] = '251';
    //flag = true;
-   pollUDP();
+   
    //Serial1.write(buf[0]);
    Serial1.write(buf[1]);
    //Serial1.write(buf[2]);
@@ -172,7 +172,7 @@ void receiveEvent(int howMany)
    //Serial1.write(buf[6]);
    Serial1.write(buf[7]);
  
-   
+   /*
    Serial.print("Roll: ");
    Serial.println(buf[1]);
    Serial.print("Pitch: ");
@@ -180,5 +180,5 @@ void receiveEvent(int howMany)
    Serial.print("Yaw: ");
    Serial.println(buf[5]);
    Serial.print("Sign: ");
-   Serial.println(buf[7]);
+   Serial.println(buf[7]);*/
 }
