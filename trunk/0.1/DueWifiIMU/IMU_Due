@@ -34,7 +34,7 @@ void setup() {
   bufptr = buf;
 
    Serial.begin(9600);
-   Serial1.begin(9600);  
+   Serial1.begin(9600);
    Wire.begin(6);
    Wire.onReceive(receiveEvent);
   
@@ -90,11 +90,15 @@ void receiveEvent(int howMany)
    yaw = Wire.read();
    sign = Wire.read();
    
-   buf[0] = roll;
-   buf[1] = pitch;
-   buf[2] = yaw;
-   buf[3] = sign;
-   buf[4] = '255';
+   buf[0] = '255';
+   buf[1] = roll;
+   buf[2] = '254';
+   buf[3] = pitch;
+   buf[4] = '253';
+   buf[5] = yaw;
+   buf[6] = '252';
+   buf[7] = sign;
+   //buf[8] = '251';
    
    Serial.print("roll: ");
    Serial.print(roll);
@@ -105,10 +109,12 @@ void receiveEvent(int howMany)
    Serial1.write(buf[2]);
    Serial1.write(buf[3]);
    Serial1.write(buf[4]);
+   Serial1.write(buf[5]);
+   Serial1.write(buf[6]);
+   Serial1.write(buf[7]);
    
    Serial.println();
    Serial.print("Pitch: ");
    Serial.print(pitch);
    
 }
-
