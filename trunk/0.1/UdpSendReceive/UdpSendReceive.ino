@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <WiFi.h>
 #include <WiFiUdp.h>
-
+#include <Wire.h>
 
 int status = WL_IDLE_STATUS;
 char ssid[] = "TantricPumpkin";
@@ -10,12 +10,20 @@ IPAddress ip;                       // IP address of the shield
 int keyIndex = 0;                   // your network key Index number (needed only for WEP)
 unsigned int localPort = 2390;      // local port to listen on
 
+//==============================================BEGIN IMU======================================>
+byte pitch, roll, yaw, sign;
+byte buf[5];
+byte * bufptr;
+bool flag = false;
+//==============================================IMU END========================================>
+
 char packetBuffer[255];             // buffer to hold incoming packet
 WiFiUDP Udp;
 
 void setup() {
   // initialize serial and wait for the port to open:
   Serial.begin(9600);
+
   while(!Serial) ;
 
   pinMode(22, OUTPUT);
@@ -59,6 +67,14 @@ void setup() {
   Serial.print("\nConnection Accomplished; Waiting on Port: ");
   Serial.println(localPort);
   
+  //==============================================BEGIN IMU======================================>
+  Serial1.begin(9600);
+
+   Wire.begin(6);
+
+   Wire.onReceive(receiveEvent);
+//==============================================IMU END========================================>      
+  
 }
 
 
@@ -67,9 +83,13 @@ void setup() {
 
 void loop() 
 {
-    delay(10);
-  
-    // if there's data available, read a packet
+    //delay(10);
+    //pollUDP();    
+}
+
+void pollUDP()
+{
+     // if there's data available, read a packet
     int packetSize = Udp.parsePacket();
     
     if (packetSize)
@@ -101,7 +121,6 @@ void loop()
     }
 }
 
-
 void printWifiStatus() {
   // print the SSID of the network you're attached to:
   Serial.print("SSID: ");
@@ -117,4 +136,49 @@ void printWifiStatus() {
   Serial.print("signal strength (RSSI):");
   Serial.print(rssi);
   Serial.println(" dBm");
+}
+
+void receiveEvent(int howMany)
+{
+    
+    pollUDP();
+  
+   roll = Wire.read();
+   pollUDP();
+   pitch = Wire.read();
+   pollUDP();
+   yaw = Wire.read();
+   pollUDP();
+   sign = Wire.read();
+   pollUDP();
+   
+   //buf[0] = '255';
+   buf[1] = roll;
+   //buf[2] = '254';
+   buf[3] = pitch;
+   //buf[4] = '253';
+   buf[5] = yaw;
+   //buf[6] = '252';
+   buf[7] = sign;
+   //buf[8] = '251';
+   //flag = true;
+   pollUDP();
+   //Serial1.write(buf[0]);
+   Serial1.write(buf[1]);
+   //Serial1.write(buf[2]);
+   Serial1.write(buf[3]);
+   //Serial1.write(buf[4]);
+   Serial1.write(buf[5]);
+   //Serial1.write(buf[6]);
+   Serial1.write(buf[7]);
+ 
+   
+   Serial.print("Roll: ");
+   Serial.println(buf[1]);
+   Serial.print("Pitch: ");
+   Serial.println(buf[3]);
+   Serial.print("Yaw: ");
+   Serial.println(buf[5]);
+   Serial.print("Sign: ");
+   Serial.println(buf[7]);
 }
