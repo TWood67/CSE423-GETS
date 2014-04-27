@@ -24,10 +24,10 @@ int east = 0;
 int west = 0;
 int north = 0;
 int south = 0;
-int n_base = 75;
-int s_base = 75;
-int e_base = 75;
-int w_base = 75;
+int n_base = 70;
+int s_base = 70;
+int e_base = 70;
+int w_base = 70;
 
 //===============================================================================>
 // Name: setup
