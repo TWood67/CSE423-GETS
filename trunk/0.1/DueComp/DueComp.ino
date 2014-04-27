@@ -187,7 +187,7 @@ void loop() {
                }
                else
                { 
-                 Serial.print("Command: ");
+                 /*Serial.print("Command: ");
                  Serial.println(command);
                  Serial.print("Roll: ");
                  Serial.println(roll);
@@ -196,8 +196,11 @@ void loop() {
                  Serial.print("Yaw: ");
                  Serial.println(yaw);
                  Serial.print("Sign: ");
-                 Serial.println(sign);
+                 Serial.println(sign);*/
                
+                 if(command == B00000001)
+                 {
+                   isDead = false;
                  set_ew_axis(roll, sign);
 	         //set_ns_axis(pitch, sign);
                  //Serial.println("TRANSMITTING");
@@ -205,7 +208,36 @@ void loop() {
                    Wire1.write(east);
                    Wire1.write(west);
                    Wire1.endTransmission();
+                  
+                 }
+                 else if(command == B00000010 && !isDead)
+                 {
+                   isDead = true;
+                   set_ew_axis(roll, sign);
+                   Wire1.beginTransmission(4);
+                   Wire1.write(east - 20);
+                   Wire1.write(west - 20);
+                   Wire1.endTransmission();
                    delay(50);
+                   set_ew_axis(roll, sign);
+                   Wire1.beginTransmission(4);
+                   Wire1.write(east - 30);
+                   Wire1.write(west - 30);
+                   Wire1.endTransmission();
+                   delay(50);
+                   Wire1.beginTransmission(4);
+                   Wire1.write(0);
+                   Wire1.write(0);
+                   Wire1.endTransmission();
+                 }
+                 else if(command == B00000000 || command == B00000100 || command == B00000011)
+                 {
+                   Wire1.beginTransmission(4);
+                   Wire1.write(0);
+                   Wire1.write(0);
+                   Wire1.endTransmission();
+                 }
+                  delay(50);
 	       //setSpeed(east, west, south, north);*/
 
                /*for(int i = 0; i<=140; i++)
