@@ -10,6 +10,7 @@ Servo Motor_Starboard, Motor_Port, Motor_Stern, Motor_Bow;
 // create pin variables to read from
 // TODO: Create all other pins for other motors.
 int starboardPin;
+int portPin;
 
 // motor speeds read from the pins
 // TODO: Create the rest of the variables
@@ -28,8 +29,8 @@ int starboardVal;
 void setSpeed(int starboard, int port, int stern, int bow) {
    Motor_Starboard.write(starboard);
    Motor_Port.write(port);
-   Motor_Stern.write(stern);
-   Motor_Bow.write(bow);
+   //Motor_Stern.write(stern);
+   //Motor_Bow.write(bow);
  }
 
 //===============================================================================>
@@ -51,27 +52,30 @@ void setup() {
    // setup the pins where data will be read
    // TODO: Give other pins a value
    starboardPin = 8;
+   portPin = 7;
    
    // create pin modes
    // TODO: Do this for the rest of the pins
    //pinMode(starboardPin, INPUT);
    // using i2c
    Wire.begin(4);
-   Wire.onReceive(receiveEvent);
+   
    
    // TODO: Attach other motors
    Motor_Starboard.attach(starboardPin);
+   Motor_Port.attach(portPin);
    
    // ARM the motor
    // TODO: Still need to figure out how to accurately arm the motors
    // with the new firmware
-   int i;
-   for (i = 0; i < 55; i++) {
-      Serial.println(i,DEC);
-      setSpeed(i, 0, 0, 0);
-      delay(100);
-   }
-   
+   //int i;
+   //for (i = 0; i < 55; i++) {
+     // Serial.println(i,DEC);
+      setSpeed(0, 0, 0, 0);
+     // ;
+   //}
+   delay(10000);
+   Wire.onReceive(receiveEvent);
 }
 
 //===============================================================================>
@@ -80,8 +84,9 @@ void setup() {
 // Description: The main function which will continuosly write to the motors
 //===============================================================================>
 void loop() {
-  Serial.println("IN LOOP");
-  delay(100);
+  //Serial.println("IN LOOP");
+  //delay(100);
+  
 }
 
 //===============================================================================>
@@ -91,7 +96,19 @@ void loop() {
 //===============================================================================>
 void receiveEvent(int howMany)
 {
-  int x = Wire.read(); // receive byte as an integer
-  Serial.println(x); // print the integer
-  Motor_Starboard.write(x);
+  int east = Wire.read(); // receive byte as an integer
+  int west = Wire.read(); // receive byte as an integer
+  //Serial.print("east: ");
+  //Serial.println(east); // print the integer
+  //Serial.print("west: ");
+  //Serial.println(west);
+  Motor_Starboard.write(east);
+  Motor_Port.write(west);
 }
+
+/*void setSpeed(int east, int west, int south, int north){
+	Motor_Starboard.write(east); // east
+   	Motor_Port.write(west);  //west
+   	Motor_Stern.write(south);  //south
+   	Motor_Bow.write(north);  //north
+}*/
