@@ -9,6 +9,7 @@ char pass[] = "willsphone";
 IPAddress ip;                       // IP address of the shield
 int keyIndex = 0;                   // your network key Index number (needed only for WEP)
 unsigned int localPort = 2390;      // local port to listen on
+byte command = 0;
 
 //==============================================BEGIN IMU======================================>
 byte pitch, roll, yaw, sign;
@@ -30,6 +31,11 @@ void setup() {
   pinMode(24, OUTPUT);
   pinMode(26, OUTPUT);
   pinMode(28, OUTPUT);
+  
+  digitalWrite(22, LOW);
+  digitalWrite(24, LOW);
+  digitalWrite(26, LOW);
+  digitalWrite(28, LOW);
 
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) 
@@ -100,24 +106,40 @@ void pollUDP()
         
         if(packetBuffer[5] == '9' && packetBuffer[6] == '9' && packetBuffer[7] == '9')
         {
-            Serial.println("Kill Command Recieved");
-            digitalWrite(28, HIGH);
+            //Serial.println("Kill Command Recieved");
+            //digitalWrite(28, HIGH);
+            //delay(50);
+            //digitalWrite(28, LOW);
+            command = B00000100;
         }
         else if (packetBuffer[5] == '9' && packetBuffer[6] == '9' && packetBuffer[7] == '8')
         {
-            Serial.println("Kill Timer Command Recieved");
-            digitalWrite(26, HIGH);
+            //Serial.println("Kill Timer Command Recieved");
+            //digitalWrite(26, HIGH);
+            command = B00000011;
+            //delay(50);
+            //digitalWrite(26, LOW);
         }
         else if (packetBuffer[5] == '2' && packetBuffer[6] == '0' && packetBuffer[7] == '1')
         {
-            Serial.println("Landing Command Recieved");
-            digitalWrite(24, HIGH);
+            //Serial.println("Launch Command Recieved");
+           // digitalWrite(24, HIGH);
+            //pinMode(24, INPUT);
+            //pinMode(22, OUTPUT);
+            //digitalWrite(22, LOW);
+            command = B00000001;
+
         }
         else if (packetBuffer[5] == '2' && packetBuffer[6] == '0' && packetBuffer[7] == '2')
         {
-            Serial.println("Launch Command Recieved");
-            digitalWrite(22, HIGH);
-        }        
+            //Serial.println("Landing Command Recieved");
+            //digitalWrite(22, HIGH);
+            //pinMode(22, INPUT);
+            //pinMode(24, OUTPUT);
+            //digitalWrite(24, LOW);
+            //digitalWrite(22, LOW);
+            command = B00000010;
+        }      
     }
 }
 
@@ -162,7 +184,8 @@ void receiveEvent(int howMany)
    buf[7] = sign;
    //buf[8] = '251';
    //flag = true;
-   
+   Serial1.write(B11111111);
+   Serial1.write(command);
    //Serial1.write(buf[0]);
    Serial1.write(buf[1]);
    //Serial1.write(buf[2]);
@@ -171,9 +194,13 @@ void receiveEvent(int howMany)
    Serial1.write(buf[5]);
    //Serial1.write(buf[6]);
    Serial1.write(buf[7]);
+   
+   
+   
+   //command = B00000000;
  
-   /*
-   Serial.print("Roll: ");
+   
+   /*Serial.print("Roll: ");
    Serial.println(buf[1]);
    Serial.print("Pitch: ");
    Serial.println(buf[3]);

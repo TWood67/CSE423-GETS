@@ -20,6 +20,7 @@ byte pitch;
 byte yaw;
 byte sign;
 byte error;
+byte command;
 int east = 0;
 int west = 0;
 int north = 0;
@@ -28,6 +29,12 @@ int n_base = 70;
 int s_base = 70;
 int e_base = 70;
 int w_base = 70;
+int val = 0;
+
+bool isFlying = false;
+bool isLanding = false;
+bool isDead = false;
+bool discard = false;
 
 //===============================================================================>
 // Name: setup
@@ -40,6 +47,11 @@ void setup() {
    // assign a base value
    // TODO: Do this for other values
    starboardVal = 0;
+ 
+   pinMode(22, INPUT);
+  pinMode(24, INPUT);
+
+
  
    // assign pin to variables
    // TODO: Do this for all pins
@@ -127,50 +139,57 @@ void set_ew_axis(byte offset, byte sign){
 
 void loop() {
 
-    
-     //Serial.println("IN LOOP ");
      
       while(Serial1.available() == 0);
        
       
          
-         while(Serial1.available() > 5)
+         while(Serial1.available() > 6)
          { 
-            while(Serial1.available() > 5){
-              Serial1.read();
-            }  
-              //Serial.println("DELETING");
-              //int unread = Serial1.available();
-            //Serial.print("Unread ");
-            //Serial.println(unread);
-         
-           //unread = Serial1.available();
-           //Serial.print("Unread2:");
-           //Serial.println(unread);
-           //int unread = Serial1.available();
-            while( (Serial1.available() == 5))
-            {
+             if(discard == true)
+             {
+                 discard = false;
+                 command = Serial1.read();
+                  while(command != B11111111)
+                  {
+                    command = Serial1.read();
+                  }
+             }
+             else
+             {
+              command = Serial1.read();
+              while(command == B11111111)
+              {
+                command = Serial1.read();
+              }
+             }
+   
+             //Serial.println(" END TRANSMITTING"); 
                roll = Serial1.read();
                pitch = Serial1.read();
                yaw = Serial1.read();
                sign = Serial1.read();
-               error = Serial1.read();
+
            //int unread2 = Serial1.available();
            //Serial.print("unread2: ");
             //Serial.println(unread2);
+       
          
-               if(roll == 255 || pitch == 255 || yaw == 255 || sign == 255)
+               if(roll == 255 || pitch == 255 || yaw == 255 || sign >2 || command > 5)
                {
                  
                  Serial1.flush();
                  break;
+                 discard = true;
                  //Serial1.flush();
                  //Serial.println("BREAKIN");
                  
                }
                else
                { 
-                 /*Serial.print("Roll: ");
+                 Serial.print("Command: ");
+                 Serial.println(command);
+                 Serial.print("Roll: ");
                  Serial.println(roll);
                  Serial.print("Pitch: ");
                  Serial.println(pitch);
@@ -178,7 +197,7 @@ void loop() {
                  Serial.println(yaw);
                  Serial.print("Sign: ");
                  Serial.println(sign);
-               */
+               
                  set_ew_axis(roll, sign);
 	         //set_ns_axis(pitch, sign);
                  //Serial.println("TRANSMITTING");
@@ -198,10 +217,11 @@ void loop() {
                    delay(50);
                 }
                Serial.println(" END TRANSMITTING");
-               */              
+               */  
+   
+                             
                }
-          
-           }       
+              
          }
        }
 
