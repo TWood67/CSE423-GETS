@@ -59,6 +59,7 @@ void setup() {
    //pinMode(starboardPin, INPUT);
    // using i2c
    Wire.begin(4);
+   //Wire.onReceive(receiveEvent);
    
    
    // TODO: Attach other motors
@@ -68,13 +69,13 @@ void setup() {
    // ARM the motor
    // TODO: Still need to figure out how to accurately arm the motors
    // with the new firmware
-   //int i;
-   //for (i = 0; i < 55; i++) {
+   int i;
+   for (i = 0; i < 55; i++) {
      // Serial.println(i,DEC);
-      setSpeed(0, 0, 0, 0);
-     // ;
-   //}
-   delay(10000);
+      setSpeed(i, i, 0, 0);
+      delay(100);;
+   }
+   delay(7000);
    Wire.onReceive(receiveEvent);
 }
 
