@@ -50,8 +50,8 @@ void setup() {
 //===============================================================================>
 void loop() {
 
-    Serial.println("IN LOOP");
-    delay(50);
+    //Serial.println("IN LOOP");
+    //delay(50);
     /*while (flag == true)
     {
        Serial1.write(buf[1]);
@@ -95,42 +95,40 @@ void loop() {
 
 void receiveEvent(int howMany)
 {
+  
+   
    roll = Wire.read();
+   buf[0] = roll;
+   Serial1.write(buf[0]);
+   
+   
    pitch = Wire.read();
-   yaw = Wire.read();
-   sign = Wire.read();
-   
-   //buf[0] = '255';
-   buf[1] = roll;
-   //buf[2] = '254';
-   buf[3] = pitch;
-   //buf[4] = '253';
-   buf[5] = yaw;
-   //buf[6] = '252';
-   buf[7] = sign;
-   //buf[8] = '251';
-   //flag = true;
-   
-   
-   
-   
-   //Serial1.write(buf[0]);
+   buf[1] = pitch;
    Serial1.write(buf[1]);
-   //Serial1.write(buf[2]);
+   
+  
+   yaw = Wire.read();
+   buf[2] = yaw;
+   Serial1.write(buf[2]);
+  
+   
+   sign = Wire.read();
+   buf[3] = sign;
    Serial1.write(buf[3]);
-   //Serial1.write(buf[4]);
-   Serial1.write(buf[5]);
-   //Serial1.write(buf[6]);
-   Serial1.write(buf[7]);
+   
+   buf[4] = 255;
+   Serial1.write(buf[4]);
  
    
    Serial.print("Roll: ");
-   Serial.println(buf[1]);
+   Serial.println(buf[0]);
    Serial.print("Pitch: ");
-   Serial.println(buf[3]);
+   Serial.println(buf[1]);
    Serial.print("Yaw: ");
-   Serial.println(buf[5]);
+   Serial.println(buf[2]);
    Serial.print("Sign: ");
-   Serial.println(buf[7]);
+   Serial.println(buf[3]);
+   Serial.print("Error: ");
+   Serial.println(buf[4]);
  
 }
