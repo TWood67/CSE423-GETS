@@ -187,7 +187,7 @@ void loop() {
                }
                else
                { 
-                 /*Serial.print("Command: ");
+                 Serial.print("Command: ");
                  Serial.println(command);
                  Serial.print("Roll: ");
                  Serial.println(roll);
@@ -196,7 +196,7 @@ void loop() {
                  Serial.print("Yaw: ");
                  Serial.println(yaw);
                  Serial.print("Sign: ");
-                 Serial.println(sign);*/
+                 Serial.println(sign);
                
                  if(command == B00000001)
                  {
