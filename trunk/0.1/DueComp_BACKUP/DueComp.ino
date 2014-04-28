@@ -187,38 +187,23 @@ void loop() {
                }
                else
                { 
-
+                 Serial.print("Command: ");
+                 Serial.println(command);
+                 Serial.print("Roll: ");
+                 Serial.println(roll);
+                 Serial.print("Pitch: ");
+                 Serial.println(pitch);
+                 Serial.print("Yaw: ");
+                 Serial.println(yaw);
+                 Serial.print("Sign: ");
+                 Serial.println(sign);
+               
                  if(command == B00000001)
                  {
                    isDead = false;
                  set_ew_axis(roll, sign);
 	         //set_ns_axis(pitch, sign);
                  //Serial.println("TRANSMITTING");
-                   Wire1.beginTransmission(4);
-                   Wire1.write(east);
-                   Wire1.write(west);
-                   Wire1.endTransmission();
-                   delay(50);
-                   Wire1.beginTransmission(4);
-                   Wire1.write(s_base);
-                   Wire1.write(s_base);
-                   Wire1.endTransmission();
-                   delay(50);
-                   Wire1.beginTransmission(4);
-                   Wire1.write(s_base);
-                   Wire1.write(s_base);
-                   Wire1.endTransmission();
-                   delay(50);
-                   Wire1.beginTransmission(4);
-                   Wire1.write(east);
-                   Wire1.write(west);
-                   Wire1.endTransmission();
-                   delay(50);
-                   Wire1.beginTransmission(4);
-                   Wire1.write(s_base);
-                   Wire1.write(s_base);
-                   Wire1.endTransmission();
-                   delay(50);
                    Wire1.beginTransmission(4);
                    Wire1.write(east);
                    Wire1.write(west);

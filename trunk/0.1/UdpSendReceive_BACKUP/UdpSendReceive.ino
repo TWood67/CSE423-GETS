@@ -13,7 +13,7 @@ byte command = 0;
 
 //==============================================BEGIN IMU======================================>
 byte pitch, roll, yaw, sign;
-byte buf[4];
+byte buf[5];
 byte * bufptr;
 bool flag = false;
 //==============================================IMU END========================================>
@@ -175,25 +175,25 @@ void receiveEvent(int howMany)
    pollUDP();
    
    //buf[0] = '255';
-   buf[0] = roll;
+   buf[1] = roll;
    //buf[2] = '254';
-   buf[1] = pitch;
+   buf[3] = pitch;
    //buf[4] = '253';
-   buf[2] = yaw;
+   buf[5] = yaw;
    //buf[6] = '252';
-   buf[3] = sign;
+   buf[7] = sign;
    //buf[8] = '251';
    //flag = true;
    Serial1.write(B11111111);
    Serial1.write(command);
    //Serial1.write(buf[0]);
-   Serial1.write(buf[0]);
-   //Serial1.write(buf[2]);
    Serial1.write(buf[1]);
-   //Serial1.write(buf[4]);
-   Serial1.write(buf[2]);
-   //Serial1.write(buf[6]);
+   //Serial1.write(buf[2]);
    Serial1.write(buf[3]);
+   //Serial1.write(buf[4]);
+   Serial1.write(buf[5]);
+   //Serial1.write(buf[6]);
+   Serial1.write(buf[7]);
    
    
    
