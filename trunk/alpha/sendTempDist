@@ -1,0 +1,362 @@
+/*
+
+  WiFi UDP Send and Receive String
+
+ 
+
+ This sketch wait an UDP packet on localPort using a WiFi shield.
+
+ When a packet is received an Acknowledge packet is sent to the client on port remotePort
+
+ 
+
+ Circuit:
+
+ * WiFi shield attached
+
+ 
+
+ created 30 December 2012
+
+ by dlf (Metodo2 srl)
+
+
+
+ */
+
+ 
+
+ /***************************************************
+
+This is an example for the TMP006 Barometric Pressure & Temp Sensor
+
+
+
+Designed specifically to work with the Adafruit TMP006 Breakout
+
+----> https://www.adafruit.com/products/1296
+
+
+
+These displays use I2C to communicate, 2 pins are required to
+
+interface
+
+Adafruit invests time and resources providing this open source code,
+
+please support Adafruit and open-source hardware by purchasing
+
+products from Adafruit!
+
+
+
+Written by Limor Fried/Ladyada for Adafruit Industries.
+
+BSD license, all text above must be included in any redistribution
+
+****************************************************/
+
+
+
+// Connect VCC on temp sensor to +3V (its a quieter supply than the 5V supply on an Arduino
+
+// Gnd -> Gnd
+
+// SCL connects to the I2C clock pin. On newer boards this is labeled with SCL
+
+// otherwise, on the Uno, this is A5 on the Mega it is 21 and on the Leonardo/Micro digital 3
+
+// SDA connects to the I2C data pin. On newer boards this is labeled with SDA
+
+// otherwise, on the Uno, this is A4 on the Mega it is 20 and on the Leonardo/Micro digital 2
+
+
+
+#include <Wire.h>
+
+#include <SPI.h>
+
+#include <WiFi.h>
+
+#include <WiFiUdp.h>
+
+#include "Adafruit_TMP006.h"
+
+
+
+Adafruit_TMP006 tmp006;
+
+//Adafruit_TMP006 tmp006(0x41); // start with a diferent i2c address!
+
+
+
+int status = WL_IDLE_STATUS;
+
+char ssid[] = "TantricPumpkin"; //  your network SSID (name)
+
+char pass[] = "willsphone";    // your network password (use for WPA, or use as key for WEP)
+
+int keyIndex = 0;            // your network key Index number (needed only for WEP)
+
+
+
+unsigned int localPort = 2390;      // local port to listen on
+
+
+
+char packetBuffer[255]; //buffer to hold incoming packet
+
+char  ReplyBuffer[] = "acknowledged";       // a string to send back
+
+char rIP[] = "192.168.1.73";
+
+unsigned int rPort = 12345;
+
+
+
+int dist = 0;
+
+float objt1;
+
+float diet1;
+
+char *packet;
+
+WiFiUDP Udp;
+
+
+
+void setup() {
+
+  //Initialize serial and wait for port to open:
+
+  Serial.begin(9600);
+
+  while (!Serial) {
+
+    ; // wait for serial port to connect. Needed for Leonardo only
+
+  }
+
+  
+
+   Serial.println("Adafruit TMP006 example");
+
+
+
+  // you can also use tmp006.begin(TMP006_CFG_1SAMPLE) or 2SAMPLE/4SAMPLE/8SAMPLE to have
+
+  // lower precision, higher rate sampling. default is TMP006_CFG_16SAMPLE which takes
+
+  // 4 seconds per reading (16 samples)
+
+  if (! tmp006.begin()) {
+
+    Serial.println("No sensor found");
+
+    while (1);
+
+  }
+
+ 
+
+  // check for the presence of the shield:
+
+  if (WiFi.status() == WL_NO_SHIELD) {
+
+    Serial.println("WiFi shield not present");
+
+    // don't continue:
+
+    while(true);
+
+  }
+
+ 
+
+  // attempt to connect to Wifi network:
+
+  while ( status != WL_CONNECTED) {
+
+    Serial.print("Attempting to connect to SSID: ");
+
+    Serial.println(ssid);
+
+    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:    
+
+    status = WiFi.begin(ssid, pass);
+
+ 
+
+    // wait 10 seconds for connection:
+
+    delay(5000);
+
+  }
+
+  Serial.println("Connected to wifi");
+
+  printWifiStatus();
+
+ 
+
+  Serial.println("\nStarting connection to server...");
+
+  // if you get a connection, report back via serial:
+
+  Udp.begin(localPort);  
+
+  
+
+  packet = (char*) malloc(sizeof(char)*8);
+
+  
+
+   objt1 = 9*tmp006.readObjTempC()/5+32;
+
+   //Serial.print("Object Temperature: "); Serial.print(objt1); Serial.println("*F");
+
+   //diet1 = 9*tmp006.readDieTempC()/5+32;
+
+   //Serial.print("Die Temperature: "); Serial.print(diet1); Serial.println("*F");
+
+}
+
+
+
+void loop() {
+
+  delay(2000);
+  
+  
+
+  packet = dtostrf(objt1, 10, 2, packet);
+
+
+  // send a packet with the temp
+
+  Udp.beginPacket(rIP, rPort);
+
+  Udp.write(packet);
+
+  Udp.endPacket();
+  
+  delay(1000);
+  
+
+   
+
+   float objt2 = 9*tmp006.readObjTempC()/5+32;
+
+   //float diet2 = 9*tmp006.readDieTempC()/5+32;
+
+   
+
+   if(objt2 != objt1)
+
+   {
+
+      //Serial.print("Object Temperature: "); Serial.print(objt2); Serial.println("*F");
+
+      objt1 = objt2;
+
+   }
+
+   
+
+   /*if(diet2 != diet1)
+
+   {
+
+     Serial.print("Die Temperature: "); Serial.print(diet2); Serial.println("*F");
+
+     diet1 = diet2;
+
+   }*/
+
+   
+
+   //read in from distance sensor
+
+   dist = analogRead(9); //read value from analog pin 2 (A2)
+
+   Serial.print("Distance: ");
+   Serial.println(dist); //print value
+   
+   //packet = diststr(dist, 8, 2, packet);
+  
+  // send a packet with the temp
+
+  //Udp.beginPacket(rIP, rPort);
+
+  //Udp.write(packet);
+
+  //Udp.endPacket();
+
+     
+
+}
+
+
+
+
+
+void printWifiStatus() {
+
+  // print the SSID of the network you're attached to:
+
+  Serial.print("SSID: ");
+
+  Serial.println(WiFi.SSID());
+
+
+
+  // print your WiFi shield's IP address:
+
+  IPAddress ip = WiFi.localIP();
+
+  Serial.print("IP Address: ");
+
+  Serial.println(ip);
+
+
+
+  // print the received signal strength:
+
+  long rssi = WiFi.RSSI();
+
+  Serial.print("signal strength (RSSI):");
+
+  Serial.print(rssi);
+
+  Serial.println(" dBm");
+
+}
+
+
+
+
+
+char *dtostrf (double val, signed char width, unsigned char prec, char *sout) {
+
+  char fmt[20];
+
+  sprintf(fmt, "%%%d.%df F", width, prec);
+
+  sprintf(sout, fmt, val);
+
+  return sout;
+
+}
+
+char *diststr (int val, signed char width, unsigned char prec, char *sout) {
+
+  char fmt[20];
+
+  sprintf(fmt, "%%%d.%df Dist", width, prec);
+
+  sprintf(sout, fmt, val);
+
+  return sout;
+
+}
